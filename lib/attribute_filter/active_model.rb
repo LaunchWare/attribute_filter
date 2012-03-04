@@ -4,7 +4,7 @@ module AttributeFilter
       if @assignment_filter_class = assignment_options.delete(:filter)
         sanitize_attributes(attributes)
       end
-      super
+      super(attributes)
     end
 
     def sanitize_attributes(attributes, filter_class = nil)
