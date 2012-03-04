@@ -2,13 +2,23 @@ module AttributeFilter
   class Filter
     class_attribute :strategy_class
 
-    def sanitize!(attributes)
-      strategy.sanitize!(attributes)
+    def sanitize(attributes)
+      strategy.sanitize(attributes)
     end
 
     class << self
       def strategy(strategy_symbol_or_class)
-        self.strategy_class = strategy_symbol_or_class
+        if strategy_symbol_or_class.is_a?(Symbol)
+          self.strategy_class = strategies[strategy_symbol_or_class]
+        else
+          self.strategy_class = strategy_symbol_or_class
+        end
+      end
+
+      protected
+
+      def strategies
+        AttributeFilter.strategies
       end
     end
 

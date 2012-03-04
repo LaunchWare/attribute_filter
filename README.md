@@ -20,12 +20,26 @@ Or install it yourself as:
 
 ``` ruby
   class UserAttributeFilter < AttributeFilter::Filter
-    strategy :whitelist,
+    strategy :white_list,
       attributes: [:first_name, :last_name, :login, :password, :password_confirmation]
   end
 
   User.new({protected_attribute: "blah", first_name: "John"}, 
     filter: UserAttributeFilter)
+```
+
+## Defining Your Own Strategy
+
+It's easy to define your own sanitization strategy
+
+``` ruby
+  class MyStrategy < AttributeFilter::Strategy
+    def sanitize(attributes = {})
+      #your implementation here
+    end
+  end
+
+  AttributeFilter.add_strategy(:mine, MyStrategy)
 ```
 
 ## Contributing

@@ -10,5 +10,16 @@ require "attribute_filter/strategies"
 
 module AttributeFilter
   class StrategyNotDefined < Exception; end
+
+  def self.strategies
+    @strategies ||= {
+      white_list: AttributeFilter::Strategies::WhiteList
+      #black_list: AttributeFilter::Strategies::BlackList
+    }
+  end
+
+  def self.add_strategy(sym, klass)
+    strategies[sym] = klass
+  end
 end
 
