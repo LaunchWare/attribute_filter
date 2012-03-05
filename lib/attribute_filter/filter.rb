@@ -23,13 +23,21 @@ module AttributeFilter
 
       def listener(listener_symbol_or_class)
         self.listener_classes ||= []
-        self.listener_classes << listener_symbol_or_class
+        if listener_symbol_or_class.is_a?(Symbol)
+          self.listener_classes << listeners[listener_symbol_or_class]
+        else
+          self.listener_classes << listener_symbol_or_class
+        end
       end
 
       protected
 
       def strategies
         AttributeFilter.strategies
+      end
+
+      def listeners
+        AttributeFilter.listeners
       end
     end
 

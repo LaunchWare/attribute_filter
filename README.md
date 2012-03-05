@@ -2,6 +2,13 @@
 
 Better mass assignment with an attribute filter abstraction.
 
+AttributeFilter is built to be extensible. You can sanitize attributes with a 
+built-in or custom strategy. We provide whitelist and blacklist sanitization 
+strategies, similar to Rails' attr_accessible and attr_protected.
+
+Additionally you can respond to when sanitization occurs via a built-in 
+or custom listener.
+
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -22,6 +29,8 @@ Or install it yourself as:
   class UserAttributeFilter < AttributeFilter::Filter
     strategy :white_list,
       attributes: [:first_name, :last_name, :login, :password, :password_confirmation]
+    listener :logger
+    listener :exceptional
   end
 
   User.new({protected_attribute: "blah", first_name: "John"}, 
@@ -41,6 +50,10 @@ It's easy to define your own sanitization strategy
 
   AttributeFilter.add_strategy(:mine, MyStrategy)
 ```
+
+## Defining Your Own Listener
+
+Listeners are fired when attributes are sanitized from a mass assignment call.
 
 ## Contributing
 

@@ -32,7 +32,7 @@ describe AttributeFilter::Filter do
 
   end
 
-  describe "with a symbol" do
+  describe "with a strategy symbol" do
     class SymbolStrategyFilter < AttributeFilter::Filter
       strategy :white_list
     end
@@ -74,12 +74,29 @@ describe AttributeFilter::Filter do
     it "triggers a listener when sanitization occurs" do
       CompanyFilter.new.sanitize({foo: "bar"})
       Listener.should be_triggered
+      Listener.triggered = nil
     end
 
     it "does not trigger a listener when sanitization does not occur" do
+      orig_hash = {name: 'foo'}
+      CompanyFilter.new.sanitize(orig_hash)
+      Listener.triggered.should_not be_true
+    end
+  end
 
+  describe "with a symbol for a listener" do
+    class OrganizationFilter < AttributeFilter::Filter
+      strategy :white_list,
+        white_list: [:first_name]
+
+      listener :exceptional
     end
 
+    it "triggers the correlating listener instance" do
+      lambda do
+        OrganizationFilter.new.sanitize({last_name: "Smith", first_name: "John"})
+      end.should raise_error(AttributeFilter::UnexpectedSanitization)
+    end
   end
 end
 

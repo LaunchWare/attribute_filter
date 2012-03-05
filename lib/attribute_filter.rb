@@ -22,6 +22,12 @@ module AttributeFilter
     }
   end
 
+  def self.listeners
+    @listeners ||= {
+      exceptional: AttributeFilter::SanitizationListeners::Exceptional
+    }
+  end
+
   def self.add_strategy(sym, klass)
     strategies[sym] = klass
   end
