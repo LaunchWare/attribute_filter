@@ -1,9 +1,15 @@
 module AttributeFilter
   class Filter
     class_attribute :strategy_class
+    class_attribute :listener_classes
 
     def sanitize(attributes)
-      strategy.sanitize(attributes)
+      new_attrs = strategy.sanitize(attributes)
+      if listeners.size > 0 && new_attrs != attributes
+        listeners.each do |listener|
+          listener.attributes_sanitized(attributes, new_attrs)
+        end
+      end
     end
 
     class << self
@@ -15,6 +21,11 @@ module AttributeFilter
         end
       end
 
+      def listener(listener_symbol_or_class)
+        self.listener_classes ||= []
+        self.listener_classes << listener_symbol_or_class
+      end
+
       protected
 
       def strategies
@@ -23,6 +34,12 @@ module AttributeFilter
     end
 
     protected
+    def listeners
+      (self.class.listener_classes || []).map do |klass|
+        klass.new(self)
+      end
+    end
+
     def strategy_class
       if self.class.strategy_class.nil?
         raise AttributeFilter::StrategyNotDefined, 

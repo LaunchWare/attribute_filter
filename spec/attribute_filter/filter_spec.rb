@@ -43,5 +43,43 @@ describe AttributeFilter::Filter do
       SymbolStrategyFilter.new.sanitize({})
     end
   end
+
+  describe "with a listener" do
+    class Listener < AttributeFilter::SanitizationListener
+      class_attribute :triggered
+      def attributes_sanitized(new_hash, old_hash)
+        self.class.triggered = true
+      end
+
+      class << self
+        def triggered?
+          triggered
+        end
+      end
+    end
+
+    class CompanyFilterStrategy < AttributeFilter::Strategy
+      def sanitize(attributes)
+        {
+          name: attributes[:name]
+        }
+      end
+    end
+
+    class CompanyFilter < AttributeFilter::Filter
+      strategy CompanyFilterStrategy
+      listener Listener
+    end
+
+    it "triggers a listener when sanitization occurs" do
+      CompanyFilter.new.sanitize({foo: "bar"})
+      Listener.should be_triggered
+    end
+
+    it "does not trigger a listener when sanitization does not occur" do
+
+    end
+
+  end
 end
 

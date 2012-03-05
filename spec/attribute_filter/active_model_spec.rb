@@ -14,7 +14,7 @@ describe AttributeFilter::ActiveModel do
 
     it "sanitizes using the filter" do
       mock_filter = mock
-      mock_filter.expects(:sanitize!).once
+      mock_filter.expects(:sanitize).once
       UserFilter.expects(:new).returns(mock_filter)
       User.new.sanitize_attributes({}, UserFilter)
     end

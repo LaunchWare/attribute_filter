@@ -10,7 +10,7 @@ module AttributeFilter
     def sanitize_attributes(attributes, filter_class = nil)
       filter_class = filter_class || @assignment_filter_class
       if filter_class
-        filter_class.new.sanitize!(attributes)
+        filter_class.new.sanitize(attributes)
       else
         attributes
       end
