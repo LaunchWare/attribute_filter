@@ -10,6 +10,7 @@ require "attribute_filter/strategy"
 require "attribute_filter/strategies"
 
 require "attribute_filter/sanitization_listener"
+require "attribute_filter/sanitization_listeners"
 
 module AttributeFilter
   class StrategyNotDefined < Exception; end
