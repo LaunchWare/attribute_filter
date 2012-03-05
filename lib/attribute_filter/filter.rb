@@ -1,6 +1,7 @@
 module AttributeFilter
   class Filter
     class_attribute :strategy_class
+    class_attribute :strategy_options
     class_attribute :listener_classes
 
     def sanitize(attributes)
@@ -13,12 +14,13 @@ module AttributeFilter
     end
 
     class << self
-      def strategy(strategy_symbol_or_class)
+      def strategy(strategy_symbol_or_class, strategy_options = {})
         if strategy_symbol_or_class.is_a?(Symbol)
           self.strategy_class = strategies[strategy_symbol_or_class]
         else
           self.strategy_class = strategy_symbol_or_class
         end
+        self.strategy_options = strategy_options
       end
 
       def listener(listener_symbol_or_class)

@@ -28,12 +28,12 @@ Or install it yourself as:
 ``` ruby
   class UserAttributeFilter < AttributeFilter::Filter
     strategy :white_list,
-      attributes: [:first_name, :last_name, :login, :password, :password_confirmation]
+      white_list: [:first_name, :last_name, :login, :password, :password_confirmation]
     listener :logger
     listener :exceptional
   end
 
-  User.new({protected_attribute: "blah", first_name: "John"}, 
+  User.new({protected_attribute: "blah", first_name: "John"},
     filter: UserAttributeFilter)
 ```
 
@@ -44,7 +44,7 @@ It's easy to define your own sanitization strategy
 ``` ruby
   class MyStrategy < AttributeFilter::Strategy
     def sanitize(attributes = {})
-      #your implementation here
+      #build your sanitization implementation here
     end
   end
 
@@ -54,6 +54,14 @@ It's easy to define your own sanitization strategy
 ## Defining Your Own Listener
 
 Listeners are fired when attributes are sanitized from a mass assignment call.
+
+``` ruby
+  class MyListener < AttributeFilter::SanitizationListener
+    def attributes_sanitized(old_attributes, new_attributes)
+      #respond to sanitization your own way here
+    end
+  end
+```
 
 ## Contributing
 
